@@ -1,23 +1,23 @@
-# Utilisez une image Node.js
-FROM node:latest
+# Use the official Node.js image as a base image
+FROM node:14-alpine
 
-# Créez et définissez le répertoire de travail
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# Mise à jour de npm
-RUN npm install -g npm@latest
-
-# Copiez d'abord les fichiers de dépendances
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Installez les dépendances en ignorant les avertissements de dépréciation
-RUN npm install --legacy-peer-deps
+# Install dependencies
 RUN npm install
-# Copiez le reste des fichiers du projet dans le conteneur
+
+# Copy the rest of the application code
 COPY . .
 
-# Exposez le port sur lequel l'application s'exécute
+# Build the Nuxt.js application
+RUN npm run build
+
+# Expose the application port
 EXPOSE 3000
 
-# Commande pour démarrer l'application
-#CMD ["npm", "run", "dev"]
+# Run the Nuxt.js application
+CMD ["npm", "start"]
